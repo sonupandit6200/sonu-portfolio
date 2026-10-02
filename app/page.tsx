@@ -358,7 +358,7 @@ export default function Home() {
   <div className="relative h-[310px] w-[310px] overflow-hidden rounded-[18px] border border-[#d4cec2] bg-white md:h-[390px] md:w-[390px]">
 
     <Image
-      src="/profile.jpg"
+      src="/profile_square.png"
       alt="Sonu Pandit"
       fill
       priority
