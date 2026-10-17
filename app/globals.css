@@ -1,18 +1,26 @@
 @import "tailwindcss";
 
+/* ==============================
+   GLOBAL STYLES
+============================== */
+
 :root {
   --background: #f5f2ea;
   --foreground: #171717;
+  --accent: #c84b08;
+  --secondary-background: #eeece5;
+  --border: #ded7cb;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 90px;
 }
 
 body {
   margin: 0;
-  background: #f5f2ea;
-  color: #171717;
+  background: var(--background);
+  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -20,39 +28,95 @@ body {
   box-sizing: border-box;
 }
 
-::selection {
-  background: #c84b08;
-  color: white;
+/* ==============================
+   PROFILE PHOTO ANIMATION
+============================== */
+
+.profile-animation {
+  animation: profile-appear 0.9s ease-out both;
 }
 
-/* Navbar */
+@keyframes profile-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
-.nav-link {
-  color: #55514b;
-  transition: color 0.2s ease;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.nav-link:hover {
-  color: #c84b08;
+/* ==============================
+   CARD HOVER ANIMATIONS
+============================== */
+
+#skills article,
+#projects article,
+#certifications article,
+#achievements article,
+#education article {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
-/* Experience tags */
-
-.experience-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: #f1eee7;
-  border: 1px solid #ddd6ca;
-  color: #55514b;
-  font-size: 14px;
+#skills article:hover,
+#projects article:hover,
+#certifications article:hover,
+#achievements article:hover,
+#education article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgb(23 23 23 / 7%);
+  border-color: var(--accent);
 }
 
-/* Mobile */
+/* ==============================
+   LINKS AND BUTTONS
+============================== */
 
-@media (max-width: 768px) {
+a {
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ==============================
+   ACCESSIBILITY
+============================== */
+
+@media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .profile-animation {
+    animation: none;
+  }
+
+  #skills article:hover,
+  #projects article:hover,
+  #certifications article:hover,
+  #achievements article:hover,
+  #education article:hover {
+    transform: none;
   }
 }

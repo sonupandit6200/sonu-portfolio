@@ -1,1404 +1,1180 @@
-import Image from "next/image";
+"use client";
 
-/* =========================================================
-   DATA
-========================================================= */
+import Image from "next/image";
+import { useState, type FormEvent, type ReactNode } from "react";
 
 const projects = [
   {
-    number: "01",
     title: "AI-Based Power System Monitor and Protection",
+    subtitle: "Intelligent electrical fault monitoring",
     date: "Apr 2026",
-    tags: ["Machine Learning", "ESP32", "Sensors", "Relay"],
+    category: "Power Systems · AI",
+    technologies: ["Machine Learning", "ESP32", "Sensors", "Relay"],
     description:
-      "Developed an intelligent fault identification system for detecting abnormal operating conditions and classifying different faults in an electrical power network using measured electrical parameters.",
-    points: [
-      "Collected and processed voltage and current parameters for electrical fault analysis.",
-      "Developed a data-driven classification framework to distinguish normal and fault conditions.",
-      "Demonstrated AI-based fault identification for faster analysis and improved power-system reliability.",
+      "An intelligent power-system monitoring and protection project designed to identify abnormal electrical operating conditions using measured parameters.",
+    highlights: [
+      "Worked with voltage and current parameters for electrical condition monitoring.",
+      "Explored data preprocessing and machine-learning-based fault classification.",
+      "Focused on fault identification and improved power-system reliability.",
     ],
+    details:
+      "The project explores how measured electrical data can help distinguish normal operating conditions from fault conditions. The objective is to demonstrate how intelligent monitoring can support electrical protection and analysis.",
   },
   {
-    number: "02",
     title: "BI-Copter",
+    subtitle: "Two-rotor aerial vehicle",
     date: "Jun 2025",
-    tags: ["Arduino", "BLDC Motors", "ESC", "PID Control"],
-    description:
-      "Designed and developed a two-rotor aerial vehicle capable of maintaining balance, stable flight and controlled movement using continuous feedback-based correction.",
-    points: [
-      "Integrated BLDC motors, ESCs, propellers, Arduino and orientation sensors.",
-      "Implemented and tuned a PID algorithm for real-time motor-speed adjustment.",
-      "Worked on hardware integration, vibration issues, alignment and flight stability.",
+    category: "Embedded Systems · Control",
+    technologies: [
+      "Arduino",
+      "BLDC Motors",
+      "ESC",
+      "MPU6050",
+      "PID Control",
     ],
+    description:
+      "A two-rotor aerial vehicle project focused on balancing, orientation sensing, and motor-speed control using embedded electronics.",
+    highlights: [
+      "Integrated BLDC motors, electronic speed controllers, and Arduino.",
+      "Used orientation feedback to study balance and flight control.",
+      "Worked on PID tuning, hardware integration, and troubleshooting.",
+    ],
+    details:
+      "The project involved integrating electronic and mechanical components and studying feedback-based motor-speed adjustment for stability and movement control.",
+  },
+  {
+    title: "Voice-Controlled Home Automation Without Wi-Fi",
+    subtitle: "Offline voice recognition and appliance switching",
+    date: "Jun 2025",
+    category: "Electrical Engineering · Home Automation",
+    technologies: [
+      "Ai-Thinker VC-02",
+      "Offline Voice Recognition",
+      "4-Channel Relay",
+      "GPIO Control",
+      "Electrical Wiring",
+    ],
+    description:
+      "Developed a voice-controlled home automation prototype using the Ai-Thinker VC-02 offline speech-recognition module and a four-channel relay module to operate electrical appliances without Wi-Fi or internet connectivity.",
+    highlights: [
+      "Configured predefined voice commands to control connected appliances.",
+      "Connected VC-02 GPIO outputs directly to relay inputs for appliance switching.",
+      "Tested light ON/OFF commands and checked responses to invalid commands.",
+    ],
+    details:
+      "The VC-02 processes trained voice commands locally and activates the corresponding GPIO output. The relay module then switches the connected appliance. The project report records successful command tests, control of up to four appliance channels, a response time below one second, and reported recognition accuracy above 95% in a quiet environment.",
   },
 ];
 
-const skillGroups = [
+const experiences = [
   {
-    icon: "⚡",
-    title: "Electrical Engineering",
+    type: "INDUSTRIAL INTERNSHIP",
+    organization: "Tenughat Thermal Power Station (TTPS)",
+    role: "Electrical Engineering Intern",
+    date: "22 Jun 2026 – 28 Jul 2026",
+    location: "Lalpania, Bokaro, Jharkhand",
     description:
-      "Core electrical engineering knowledge focused on power, energy and electrical systems.",
+      "Gained practical exposure to thermal power generation, electrical equipment, plant operations, and the role of electrical systems in power production.",
     skills: [
-      "Power Systems",
-      "Electrical Machines",
-      "Power Electronics",
-      "Power Generation",
+      "Generators",
+      "Transformers",
+      "Switchgear",
       "Protection Systems",
+      "Power Generation",
+      "Boilers & Turbines",
     ],
+    certificate:
+      "https://drive.google.com/file/d/1P-PDspGKozfOhcC-hJa5OQrwcEE-qHA6/view",
   },
   {
-    icon: "</>",
-    title: "Programming",
+    type: "TECHNICAL TRAINING",
+    organization: "Electric Loco Shed, Bokaro",
+    role: "Electrical Maintenance Trainee",
+    date: "26 Aug 2024 – 25 Sept 2024",
+    location: "Bokaro, Jharkhand",
     description:
-      "Programming fundamentals used for engineering analysis, automation and problem solving.",
-    skills: ["C", "C++", "Python"],
-  },
-  {
-    icon: "◈",
-    title: "Engineering Tools",
-    description:
-      "Software and development platforms used for simulation, analysis and practical projects.",
-    skills: ["MATLAB", "Simulink", "Proteus", "Arduino IDE"],
-  },
-  {
-    icon: "✦",
-    title: "Professional Skills",
-    description:
-      "Professional capabilities developed through academic work, projects and technical activities.",
+      "Gained practical exposure to electric locomotive equipment, maintenance practices, inspection procedures, and electrical safety.",
     skills: [
-      "Problem-Solving",
-      "Analytical Thinking",
-      "Teamwork",
-      "Communication",
-      "Adaptability",
+      "Traction Motors",
+      "Transformers",
+      "Converters",
+      "Circuit Breakers",
+      "Pantographs",
+      "Braking Systems",
     ],
+    certificate:
+      "https://drive.google.com/file/d/14hAO30T5URP18BkkUP_-7eyz0Bsp88qT/view",
   },
 ];
-
-/* =========================================================
-   CERTIFICATIONS
-   Latest → Oldest
-========================================================= */
 
 const certifications = [
   {
-    number: "01",
     title: "Cybersecurity Analyst Job Simulation",
     organization: "Tata Group | Forage",
     date: "Jul 2026",
     category: "Professional",
     link: "https://drive.google.com/file/d/1y_pNOOls2qlNeOJgDgv31pXiTS30mM51/view",
+    symbol: "CY",
   },
   {
-    number: "02",
     title: "LPU Hackathon 2.0",
     organization: "Lovely Professional University",
     date: "Apr 2026",
     category: "Hackathon",
     link: "https://drive.google.com/file/d/1UBmEy84REl8fpYgw9EDszzn2vWKu1XlO/view?usp=drive_link",
+    symbol: "LPU",
   },
   {
-    number: "03",
     title: "MATLAB Onramp",
     organization: "MathWorks Training Services",
     date: "Jan 2026",
     category: "Technical",
     link: "https://drive.google.com/file/d/1SqMAwKXvoHOkgj80YRVP7hbVrQWHXdO_/view",
+    symbol: "MAT",
   },
   {
-    number: "04",
     title: "Programming in C",
     organization: "Infosys Springboard",
     date: "Jan 2026",
     category: "Technical",
     link: "https://drive.google.com/file/d/1ls78Z1YZ6DC1un4pAIcKwXSgKMbtX-if/view",
+    symbol: "C",
   },
 ];
 
 const education = [
   {
-    degree: "Bachelor of Technology in Electrical Engineering",
-    institute: "Lovely Professional University",
+    degree: "B.Tech in Electrical Engineering",
+    institution: "Lovely Professional University",
     location: "Phagwara, Punjab",
-    period: "Aug 2025 – Present",
+    date: "Aug 2025 – Present",
     result: "CGPA: 8.53",
   },
   {
     degree: "Diploma in Electrical Engineering",
-    institute: "Silli Polytechnic, Silli",
-    location: "Ranchi, Jharkhand",
-    period: "Sept 2022 – June 2025",
-    result: "Percentage: 80.44%",
+    institution: "Silli Polytechnic",
+    location: "Silli, Ranchi, Jharkhand",
+    date: "Sep 2022 – Jun 2025",
+    result: "80.44%",
   },
   {
     degree: "Matriculation",
-    institute: "Krishna Sudarsan Central School (CCL)",
+    institution: "Krishna Sudarsan Central School (CCL)",
     location: "Bokaro, Jharkhand",
-    period: "Mar 2021 – Apr 2022",
-    result: "Percentage: 87.4%",
+    date: "Mar 2021 – Apr 2022",
+    result: "87.4%",
   },
 ];
 
-/* =========================================================
-   COMPONENT
-========================================================= */
+const achievements = [
+  {
+    
+    date: "23 SEP 2026",
+    title: "First Prize Winner",
+    subtitle: "Latest Trends in Clean Energy Vehicles",
+    description:
+      "Received first prize at an event focused on emerging developments in clean energy vehicles.",
+    type: "image" as const,
+    image: "/achievements/clean-energy-prize.jpg",
+    link: "/achievements/clean-energy-prize.jpg",
+    button: "View Achievement Photo",
+  },
+  {
+   
+    date: "DEC 2025",
+    title: "Patent Published",
+    subtitle: "BI-COPTER",
+    description:
+      "Patent-related achievement associated with the BI-COPTER project.",
+    type: "drive" as const,
+    preview:
+      "https://drive.google.com/file/d/1S3cCfgLQdm725tJ9thmndDsDpdiySz2l/preview",
+    link:
+      "https://drive.google.com/file/d/1S3cCfgLQdm725tJ9thmndDsDpdiySz2l/view",
+    button: "View Patent Certificate",
+  },
+  {
+
+    date: "DEC 2022",
+    title: "Third Prize Winner",
+    subtitle: "Mathematics Quiz — Silli Polytechnic",
+    description:
+      "Secured third prize in a Mathematics Quiz at Silli Polytechnic.",
+    type: "drive" as const,
+    preview:
+      "https://drive.google.com/file/d/1wAaMJPtP0-kgA3Vxt7Yyf57plKew-hfq/preview",
+    link:
+      "https://drive.google.com/file/d/1wAaMJPtP0-kgA3Vxt7Yyf57plKew-hfq/view",
+    button: "View Quiz Certificate",
+  },
+];
+
+const skillGroups = [
+  {
+    title: "Electrical Engineering",
+    icon: "ϟ",
+    skills: [
+      "Power Systems",
+      "Electrical Machines",
+      "Power Electronics",
+      "Electrical Protection",
+      "Transformers",
+      "Switchgear",
+    ],
+  },
+  {
+    title: "Engineering Software",
+    icon: "⌘",
+    skills: ["MATLAB", "Simulink", "Proteus", "Arduino IDE"],
+  },
+  {
+    title: "Programming",
+    icon: "</>",
+    skills: ["C", "C++", "Python"],
+  },
+  {
+    title: "Embedded Systems",
+    icon: "▣",
+    skills: ["Arduino", "ESP32", "Sensors", "Relay Control"],
+  },
+  {
+    title: "Areas of Interest",
+    icon: "↗",
+    skills: [
+      "Smart Grid",
+      "Renewable Energy",
+      "Electric Vehicles",
+      "Power Generation",
+    ],
+  },
+  {
+    title: "Professional Skills",
+    icon: "◎",
+    skills: [
+      "Problem Solving",
+      "Teamwork",
+      "Analytical Thinking",
+      "Adaptability",
+    ],
+  },
+];
+
+function SectionHeading({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow: string;
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="mb-10 max-w-3xl">
+      <p className="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-[#c84b08]">
+        {eyebrow}
+      </p>
+      <h2 className="text-3xl font-bold tracking-tight text-[#171717] sm:text-4xl md:text-5xl">
+        {title}
+      </h2>
+      {description && (
+        <p className="mt-4 max-w-2xl text-base leading-7 text-[#666157] sm:text-lg">
+          {description}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function Tag({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex rounded-full border border-[#ddd5c8] px-3 py-1.5 text-xs font-medium text-[#514b42]">
+      {children}
+    </span>
+  );
+}
 
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const navItems = [
+    ["Home", "#home"],
+    ["About", "#about"],
+    ["Skills", "#skills"],
+    ["Projects", "#projects"],
+    ["Experience", "#experience"],
+    ["Certifications", "#certifications"],
+    ["Education", "#education"],
+    ["Achievements", "#achievements"],
+    ["Contact", "#contact"],
+  ];
+
+  function handleContactSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const form = new FormData(event.currentTarget);
+    const name = String(form.get("name") || "");
+    const email = String(form.get("email") || "");
+    const message = String(form.get("message") || "");
+
+    const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    );
+
+    window.location.href =
+      `mailto:sonupandit6200@gmail.com?subject=${subject}&body=${body}`;
+  }
+
   return (
     <main className="min-h-screen bg-[#f5f2ea] text-[#171717]">
+      {/* NAVIGATION */}
+      <header className="sticky top-0 z-50 border-b border-[#dfd8cb] bg-[#f5f2ea]/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+          <a
+            href="#home"
+            className="shrink-0 text-xl font-extrabold tracking-tight sm:text-2xl"
+          >
+            Sonu Pandit
+          </a>
 
-      {/* =====================================================
-          NAVBAR
-      ===================================================== */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="rounded-lg border border-[#d8d0c3] px-3 py-2 text-sm font-semibold md:hidden"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
 
-      <header className="sticky top-0 z-50 border-b border-[#ded9cf] bg-[#f5f2ea]/95 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-6">
-          <nav className="flex h-[74px] items-center justify-between">
-
-            <a
-              href="#home"
-              className="text-2xl font-bold tracking-tight md:text-3xl"
-            >
-              Sonu Pandit
-            </a>
-
-            <div className="hidden items-center gap-7 text-[15px] font-medium lg:flex">
-              <a href="#home" className="transition hover:text-[#c84b08]">
-                Home
-              </a>
-
-              <a href="#about" className="transition hover:text-[#c84b08]">
-                About
-              </a>
-
-              <a href="#skills" className="transition hover:text-[#c84b08]">
-                Skills
-              </a>
-
-              <a href="#projects" className="transition hover:text-[#c84b08]">
-                Projects
-              </a>
-
+          <nav
+            className={`${
+              menuOpen ? "flex" : "hidden"
+            } absolute left-0 right-0 top-full flex-col gap-1 border-b border-[#dfd8cb] bg-[#f5f2ea] p-5 md:static md:flex md:flex-row md:items-center md:gap-3 md:border-0 md:bg-transparent md:p-0`}
+          >
+            {navItems.map(([label, href]) => (
               <a
-                href="#experience"
-                className="transition hover:text-[#c84b08]"
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-2 py-2 text-sm font-medium text-[#514b42] transition hover:bg-[#eae5da] hover:text-[#c84b08]"
               >
-                Experience
+                {label}
               </a>
-
-              <a
-                href="#certifications"
-                className="transition hover:text-[#c84b08]"
-              >
-                Certifications
-              </a>
-
-              <a
-                href="#education"
-                className="transition hover:text-[#c84b08]"
-              >
-                Education
-              </a>
-
-              <a
-                href="#achievements"
-                className="transition hover:text-[#c84b08]"
-              >
-                Achievements
-              </a>
-
-              <a
-                href="#contact"
-                className="transition hover:text-[#c84b08]"
-              >
-                Contact
-              </a>
-            </div>
+            ))}
 
             <a
               href="/resume.pdf"
-              download
-              className="hidden items-center gap-2 rounded-xl bg-[#171717] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#c84b08] md:inline-flex"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 rounded-xl bg-[#171717] px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#c84b08] md:mt-0"
             >
-              View CV
+              View CV ↗
             </a>
-
           </nav>
         </div>
       </header>
 
-      {/* =====================================================
-          1. HOME
-      ===================================================== */}
-
+      {/* HOME */}
       <section
         id="home"
-        className="flex min-h-[calc(100vh-74px)] items-center py-20"
+        className="scroll-mt-24 px-5 py-16 sm:px-8 md:py-24"
       >
-        <div className="mx-auto w-full max-w-7xl px-6">
+        <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
+          <div>
+            <p className="mb-5 text-xs font-bold uppercase tracking-[0.25em] text-[#c84b08] sm:text-sm">
+              Electrical Engineering Student
+            </p>
 
-          <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_0.9fr]">
+            <h1 className="whitespace-nowrap text-4xl font-black leading-tight tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+              Sonu Pandit
+            </h1>
 
-            {/* LEFT */}
+            <h2 className="mt-7 max-w-2xl text-xl font-bold leading-snug sm:text-2xl md:text-3xl">
+              Electrical Engineer{" "}
+              <span className="text-[#c84b08]">|</span> Power Systems
+              Engineer <span className="text-[#c84b08]">|</span> EV Engineer
+            </h2>
 
-            <div>
+            <p className="mt-6 max-w-2xl text-base leading-8 text-[#625c52] sm:text-lg">
+              I am <strong className="text-[#171717]">Sonu Pandit</strong>,
+              currently pursuing my B.Tech in Electrical Engineering at{" "}
+              <strong className="text-[#171717]">
+                Lovely Professional University
+              </strong>
+              . My interests include{" "}
+              <span className="font-medium text-[#c84b08]">
+                Power Systems, Smart Grid, Renewable Energy and Electric
+                Vehicles
+              </span>
+              , with a focus on practical electrical engineering solutions.
+            </p>
 
-              <p className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-[#c84b08]">
-                Electrical Engineering Student
-              </p>
-
-              <h1 className="text-6xl font-bold leading-[0.92] tracking-[-0.055em] md:text-7xl lg:text-[88px]">
-                Sonu Pandit
-              </h1>
-
-              <h2 className="mt-8 text-2xl font-semibold leading-tight md:text-3xl">
-                Electrical Engineer
-                <span className="text-[#c84b08]"> | </span>
-                Power Systems Engineer
-                <span className="text-[#c84b08]"> | </span>
-                EV Engineer
-              </h2>
-
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-[#5d5953] md:text-xl">
-                I am{" "}
-                <strong className="text-[#171717]">
-                  Sonu Pandit
-                </strong>
-                , currently pursuing my B.Tech in Electrical Engineering at{" "}
-                <strong className="text-[#171717]">
-                  Lovely Professional University
-                </strong>
-                . My interests include{" "}
-                <span className="font-medium text-[#c84b08]">
-                  Power Systems, Smart Grid, Renewable Energy and Electric
-                  Vehicles
-                </span>
-                , with a focus on practical electrical engineering solutions.
-              </p>
-
-              {/* BUTTONS */}
-
-              <div className="mt-9 flex flex-wrap gap-4">
-
-                <a
-                  href="#projects"
-                  className="rounded-xl bg-[#171717] px-7 py-4 font-semibold text-white transition hover:bg-[#c84b08]"
-                >
-                  View Projects
-                </a>
-
-                <a
-                  href="/resume.pdf"
-                  download
-                  className="rounded-xl border border-[#171717] px-7 py-4 font-semibold transition hover:bg-[#171717] hover:text-white"
-                >
-                  Download CV
-                </a>
-
-                <a
-                  href="#contact"
-                  className="rounded-xl border border-[#cfc8bc] bg-white px-7 py-4 font-semibold transition hover:border-[#c84b08] hover:text-[#c84b08]"
-                >
-                  Let&apos;s Connect →
-                </a>
-
-              </div>
-
-              {/* SOCIAL LINKS */}
-
-              <div className="mt-9 flex flex-wrap items-center gap-7 text-[#55514b]">
-
-                <a
-                  href="mailto:sonupandit6200@gmail.com"
-                  className="transition hover:text-[#c84b08]"
-                >
-                  ✉ Email
-                </a>
-
-                <a
-                  href="tel:+916200424968"
-                  className="transition hover:text-[#c84b08]"
-                >
-                  ☎ Phone
-                </a>
-
-                <a
-                  href="https://www.linkedin.com/in/sonu-pan2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition hover:text-[#c84b08]"
-                >
-                  in LinkedIn
-                </a>
-
-                <a
-                  href="https://github.com/sonupandit"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition hover:text-[#c84b08]"
-                >
-                  GitHub
-                </a>
-
-              </div>
-
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#projects"
+                className="rounded-xl bg-[#171717] px-6 py-4 text-sm font-bold text-white transition hover:bg-[#c84b08]"
+              >
+                Explore Projects ↘
+              </a>
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-xl border border-[#8c8375] px-6 py-4 text-sm font-bold transition hover:bg-white"
+              >
+                Download CV ↗
+              </a>
+              <a
+                href="#contact"
+                className="rounded-xl border border-[#d8d0c3] bg-white px-6 py-4 text-sm font-bold transition hover:border-[#c84b08]"
+              >
+                Let&apos;s Connect →
+              </a>
             </div>
 
-            {/* RIGHT — PHOTO */}
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[#625c52]">
+              <a
+                href="mailto:sonupandit6200@gmail.com"
+                className="hover:text-[#c84b08]"
+              >
+                ✉ Email
+              </a>
+              <a
+                href="tel:+916200424968"
+                className="hover:text-[#c84b08]"
+              >
+                ☎ Phone
+              </a>
+              <a
+                href="https://www.linkedin.com/in/sonu-pan2"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#c84b08]"
+              >
+                LinkedIn ↗
+              </a>
+              <a
+                href="https://github.com/sonupandit"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#c84b08]"
+              >
+                GitHub ↗
+              </a>
+            </div>
+          </div>
 
-            <div className="flex justify-center lg:justify-end">
-
-              <div className="relative">
-
-  <div className="absolute -inset-5 rounded-[28px] border border-[#d7d0c3]" />
-
-  <div className="absolute -inset-2 rounded-[22px] border border-[#c84b08]/30" />
-
-  <div className="relative h-[310px] w-[310px] overflow-hidden rounded-[18px] border border-[#d4cec2] bg-white md:h-[390px] md:w-[390px]">
-
-    <Image
-      src="/profile_square.png"
-      alt="Sonu Pandit"
-      fill
-      priority
-      className="object-cover object-[90%_30%]"
-    />
-
+       {/* PROFILE PHOTO */}
+<div className="profile-animation mx-auto w-full max-w-md">
+  <div className="rounded-[2rem] border border-[#ddd4c5] p-3">
+    <div className="rounded-[1.6rem] border border-[#e8b99b] p-2">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[1.25rem] bg-[#e8e3d9]">
+        <Image
+          src="/profile_square.png"
+          alt="Sonu Pandit"
+          fill
+          priority
+          sizes="(max-width: 768px) 90vw, 400px"
+          className="object-cover object-[50%_18%]"
+        />
+      </div>
+    </div>
   </div>
 
-  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-xl bg-[#171717] px-6 py-3 text-sm font-semibold text-white">
-  </div>
-
+  <p className="mt-5 text-center text-sm font-semibold text-[#625c52]">
+    B.Tech Electrical Engineering
+  </p>
 </div>
-            </div>
-
-          </div>
-
         </div>
       </section>
 
-      {/* =====================================================
-          2. ABOUT + AREAS OF INTEREST
-      ===================================================== */}
+      {/* ABOUT */}
+      <section
+        id="about"
+        className="scroll-mt-24 border-y border-[#e3dccf] bg-[#eeece5] px-5 py-20 sm:px-8 md:py-24"
+      >
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          <SectionHeading
+            eyebrow="A little about me"
+            title="Engineering with purpose."
+            description="Building a strong foundation in electrical engineering through academic learning, practical projects, and technical training."
+          />
 
-      <section id="about" className="bg-[#eeece5] py-28">
-        <div className="mx-auto max-w-7xl px-6">
+          <div>
+            <p className="text-lg leading-8 text-[#625c52]">
+              I am an Electrical Engineering student interested in
+              understanding how electrical systems are designed, operated,
+              monitored, and protected. My academic background and hands-on
+              project work have helped me explore embedded systems, power
+              systems, and electrical control.
+            </p>
 
-          <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
+            <p className="mt-5 text-lg leading-8 text-[#625c52]">
+              I aim to keep developing practical skills and apply engineering
+              concepts to real-world challenges in power generation, smart
+              grids, renewable energy, and electric mobility.
+            </p>
 
-            {/* ABOUT */}
-
-            <div>
-
-              <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-[#d9cdb6] bg-[#e8e2d5] px-5 py-2 text-sm font-medium text-[#c84b08]">
-                <span>✦</span>
-                <span>About Me</span>
-              </div>
-
-              <h2 className="text-5xl font-bold leading-[1.02] tracking-[-0.04em] md:text-6xl">
-                Electrical
-                <br />
-                engineering
-                <br />
-                with practical
-                <br />
-                <span className="text-[#c84b08]">
-                  thinking.
-                </span>
-              </h2>
-
-              <div className="mt-9 max-w-xl space-y-6">
-
-                <p className="text-lg leading-8 text-[#55514b]">
-                  I am an Electrical Engineering student at{" "}
-                  <strong className="text-[#171717]">
-                    Lovely Professional University
-                  </strong>
-                  , with a Diploma background in Electrical Engineering and
-                  practical exposure through industrial training, technical
-                  projects and hands-on learning.
-                </p>
-
-                <p className="text-lg leading-8 text-[#55514b]">
-                  My technical interests are centered around{" "}
-                  <strong className="text-[#171717]">
-                    Power Systems and Smart Grid technologies
-                  </strong>
-                  , where I am interested in modern power networks,
-                  protection, grid automation and efficient energy management.
-                </p>
-
-                <p className="text-lg leading-8 text-[#55514b]">
-                  I am also developing my understanding of{" "}
-                  <span className="font-medium text-[#c84b08]">
-                    Renewable Energy and Electric Vehicles
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {[
+                "Power Systems",
+                "Smart Grid",
+                "Renewable Energy",
+                "Electric Vehicles",
+              ].map((interest) => (
+                <div
+                  key={interest}
+                  className="flex items-center gap-3 rounded-xl border border-[#dcd4c6] bg-[#f8f6f0] p-4 transition hover:-translate-y-1 hover:border-[#c84b08]"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#171717] text-sm font-bold text-white">
+                    ↗
                   </span>
-                  , particularly technologies that support cleaner, smarter
-                  and more sustainable energy systems.
-                </p>
-
-              </div>
-
+                  <span className="font-semibold">{interest}</span>
+                </div>
+              ))}
             </div>
-
-            {/* AREAS OF INTEREST */}
-
-            <div>
-
-              <p className="mb-7 text-sm font-semibold uppercase tracking-[0.2em] text-[#c84b08]">
-                Areas of Interest
-              </p>
-
-              <div className="space-y-5">
-
-                <div className="rounded-2xl border border-black/5 bg-white p-7 transition hover:-translate-y-1 hover:border-[#c84b08]/40">
-
-                  <div className="flex items-start gap-5">
-
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#c84b08]/10 text-xl text-[#c84b08]">
-                      ⚡
-                    </div>
-
-                    <div>
-
-                      <p className="mb-1 text-sm font-medium text-[#99928a]">
-                        01
-                      </p>
-
-                      <h3 className="text-2xl font-bold">
-                        Power Systems
-                      </h3>
-
-                      <p className="mt-3 leading-7 text-[#66615b]">
-                        Power generation, transmission, distribution,
-                        protection and electrical power-system analysis.
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-                <div className="rounded-2xl border border-black/5 bg-white p-7 transition hover:-translate-y-1 hover:border-[#c84b08]/40">
-
-                  <div className="flex items-start gap-5">
-
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#c84b08]/10 text-xl text-[#c84b08]">
-                      ◈
-                    </div>
-
-                    <div>
-
-                      <p className="mb-1 text-sm font-medium text-[#99928a]">
-                        02
-                      </p>
-
-                      <h3 className="text-2xl font-bold">
-                        Smart Grid
-                      </h3>
-
-                      <p className="mt-3 leading-7 text-[#66615b]">
-                        Intelligent power networks, grid automation,
-                        energy management and modern grid technologies.
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-                <div className="rounded-2xl bg-[#171717] p-7 text-white">
-
-                  <p className="text-sm font-semibold uppercase tracking-widest text-[#e88b5f]">
-                    Exploring
-                  </p>
-
-                  <p className="mt-3 text-xl font-semibold leading-8">
-                    Renewable Energy
-                    <span className="text-[#e88b5f]"> • </span>
-                    Electric Vehicles
-                  </p>
-
-                  <p className="mt-3 leading-7 text-gray-400">
-                    Exploring sustainable energy technologies and electric
-                    mobility as part of my broader electrical engineering
-                    interests.
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
           </div>
-
         </div>
       </section>
 
-      {/* =====================================================
-          3. TECHNICAL SKILLS
-      ===================================================== */}
+      {/* SKILLS */}
+      <section
+        id="skills"
+        className="scroll-mt-24 px-5 py-20 sm:px-8 md:py-24"
+      >
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Technical capabilities"
+            title="Skills & tools."
+            description="Core electrical engineering knowledge combined with programming, embedded systems, and engineering software."
+          />
 
-      <section id="skills" className="bg-[#f5f2ea] py-28">
-        <div className="mx-auto max-w-7xl px-6">
-
-          <div className="mx-auto max-w-3xl text-center">
-
-            <div className="inline-flex items-center gap-3 rounded-full border border-[#ded2b9] bg-[#eee8da] px-5 py-2 text-sm font-medium text-[#c84b08]">
-              <span>✦</span>
-              <span>Core Competencies</span>
-            </div>
-
-            <h2 className="mt-7 text-5xl font-bold tracking-[-0.04em] md:text-6xl">
-              Technical Skills
-            </h2>
-
-            <p className="mt-5 text-lg leading-8 text-[#66615b]">
-              Electrical engineering knowledge, programming capabilities
-              and engineering tools developed through academic learning
-              and practical projects.
-            </p>
-
-          </div>
-
-          <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {skillGroups.map((group) => (
-
-              <div
+              <article
                 key={group.title}
-                className="rounded-2xl border border-black/10 bg-white p-8 transition hover:-translate-y-1 hover:border-[#c84b08]/40"
+                className="rounded-2xl border border-[#ded7cb] bg-[#f8f6f0] p-6 transition duration-200 hover:-translate-y-1 hover:border-[#c84b08]/60 hover:shadow-lg hover:shadow-[#171717]/5"
               >
-
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#eee7d8] text-xl font-semibold text-[#c84b08]">
-                  {group.icon}
+                <div className="flex items-center gap-4">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#e9e0d2] text-lg font-bold text-[#c84b08]">
+                    {group.icon}
+                  </span>
+                  <h3 className="text-lg font-bold">{group.title}</h3>
                 </div>
 
-                <h3 className="mt-7 text-2xl font-bold">
-                  {group.title}
-                </h3>
-
-                <p className="mt-4 leading-7 text-[#66615b]">
-                  {group.description}
-                </p>
-
-                <div className="mt-7 flex flex-wrap gap-2 border-t border-black/10 pt-6">
-
+                <div className="mt-6 flex flex-wrap gap-2">
                   {group.skills.map((skill) => (
-
-                    <span
-                      key={skill}
-                      className="rounded-lg border border-[#dfd8ca] bg-[#f1eee7] px-3 py-2 text-sm text-[#55514b]"
-                    >
-                      {skill}
-                    </span>
-
+                    <Tag key={skill}>{skill}</Tag>
                   ))}
-
                 </div>
-
-              </div>
-
+              </article>
             ))}
-
           </div>
-
         </div>
       </section>
 
-      {/* =====================================================
-          4. PROJECTS
-      ===================================================== */}
+      {/* PROJECTS */}
+      <section
+        id="projects"
+        className="scroll-mt-24 border-y border-[#e3dccf] bg-[#eeece5] px-5 py-20 sm:px-8 md:py-24"
+      >
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Selected work"
+            title="Projects."
+            description="Electrical and embedded-system projects exploring monitoring, control, and practical engineering applications."
+          />
 
-      <section id="projects" className="bg-[#eeece5] py-28">
-        <div className="mx-auto max-w-7xl px-6">
-
-          <div className="mb-14">
-
-            <p className="text-sm font-semibold uppercase tracking-widest text-[#c84b08]">
-              Selected Work
-            </p>
-
-            <h2 className="mt-3 text-5xl font-bold md:text-6xl">
-              Projects
-            </h2>
-
-          </div>
-
-          <div className="space-y-7">
-
+          <div className="grid gap-6 lg:grid-cols-2">
             {projects.map((project) => (
-
               <article
-                key={project.number}
-                className="rounded-2xl border border-black/10 bg-white p-8 transition hover:border-[#c84b08]/40 md:p-10"
+                key={project.title}
+                className="flex flex-col rounded-[1.5rem] border border-[#dcd4c7] bg-[#f8f6f0] p-6 transition duration-200 hover:-translate-y-1 hover:border-[#c84b08]/60 hover:shadow-lg hover:shadow-[#171717]/5 sm:p-8"
               >
-
-                <div className="flex flex-col gap-5 lg:flex-row lg:justify-between">
-
-                  <div>
-
-                    <p className="font-mono text-sm text-[#c84b08]">
-                      {project.number}
-                    </p>
-
-                    <h3 className="mt-3 text-3xl font-bold md:text-4xl">
-                      {project.title}
-                    </h3>
-
-                  </div>
-
-                  <span className="text-sm text-[#77716a]">
+                <div className="flex items-start justify-end">
+                  <span className="rounded-full bg-[#e9e0d2] px-3 py-1.5 text-xs font-semibold text-[#76513b]">
                     {project.date}
                   </span>
-
                 </div>
 
-                <p className="mt-6 max-w-5xl text-lg leading-8 text-[#55514b]">
+                <p className="mt-5 text-xs font-bold uppercase tracking-[0.16em] text-[#c84b08]">
+                  {project.category}
+                </p>
+
+                <h3 className="mt-2 text-2xl font-bold leading-tight sm:text-3xl">
+                  {project.title}
+                </h3>
+
+                <p className="mt-2 font-semibold text-[#514b42]">
+                  {project.subtitle}
+                </p>
+
+                <p className="mt-5 leading-7 text-[#625c52]">
                   {project.description}
                 </p>
 
-                <div className="mt-6 flex flex-wrap gap-2">
-
-                  {project.tags.map((tag) => (
-
-                    <span
-                      key={tag}
-                      className="rounded-lg border border-[#ddd6ca] bg-[#f1eee7] px-3 py-2 text-sm"
-                    >
-                      {tag}
-                    </span>
-
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {project.technologies.map((technology) => (
+                    <Tag key={technology}>{technology}</Tag>
                   ))}
-
                 </div>
 
-                <ul className="mt-7 space-y-3">
-
-                  {project.points.map((point) => (
-
+                <ul className="mt-6 space-y-3">
+                  {project.highlights.map((highlight) => (
                     <li
-                      key={point}
-                      className="flex gap-3 leading-7 text-[#66615b]"
+                      key={highlight}
+                      className="flex gap-3 leading-6 text-[#514b42]"
                     >
-
-                      <span className="mt-1 text-[#c84b08]">
+                      <span className="mt-1 text-lg font-bold text-[#c84b08]">
                         •
                       </span>
-
-                      <span>
-                        {point}
-                      </span>
-
+                      <span>{highlight}</span>
                     </li>
-
                   ))}
-
                 </ul>
 
+                <details className="group mt-6 border-t border-[#ded7cb] pt-5">
+                  <summary className="cursor-pointer list-none font-bold">
+                    <span className="flex items-center justify-between gap-4">
+                      View project details
+                      <span className="text-xl text-[#c84b08] transition group-open:rotate-45">
+                        +
+                      </span>
+                    </span>
+                  </summary>
+
+                  <p className="mt-4 leading-7 text-[#625c52]">
+                    {project.details}
+                  </p>
+                </details>
+
+                <div className="mt-auto border-t border-[#ded7cb] pt-5">
+                  <a
+                    href="#contact"
+                    className="inline-flex rounded-xl bg-[#171717] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#c84b08]"
+                  >
+                    Discuss Project ↗
+                  </a>
+                </div>
               </article>
-
             ))}
-
           </div>
-
         </div>
       </section>
 
-      {/* =====================================================
-          5. EXPERIENCE
-      ===================================================== */}
-
-      <section id="experience" className="bg-[#f5f2ea] py-28">
-        <div className="mx-auto max-w-7xl px-6">
-
-          <div className="mb-16">
-
-            <p className="text-sm font-semibold uppercase tracking-widest text-[#c84b08]">
-              Industrial Exposure
-            </p>
-
-            <h2 className="mt-3 text-5xl font-bold md:text-6xl">
-              Experience
-            </h2>
-
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-[#66615b]">
-              Practical exposure developed through industrial training,
-              electrical systems and hands-on engineering environments.
-            </p>
-
-          </div>
-
-          <div className="relative">
-
-            <div className="absolute bottom-0 left-[18px] top-0 hidden w-px bg-[#d8d3c9] md:block" />
-
-            <div className="space-y-10">
-
-              {/* EXPERIENCE 01 */}
-
-              <div className="relative md:pl-20">
-
-                <div className="absolute left-0 top-8 hidden h-[37px] w-[37px] items-center justify-center rounded-full border border-[#c9c3b8] bg-[#f5f2ea] md:flex">
-                  <div className="h-3 w-3 rounded-full bg-[#c84b08]" />
-                </div>
-
-                <div className="rounded-2xl border border-black/10 bg-white p-8 transition hover:border-[#c84b08]/40 md:p-10">
-
-                  <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-
-                    <div>
-
-                      <div className="mb-4 flex flex-wrap items-center gap-3">
-
-                        <span className="rounded-md border border-[#e5d6bb] bg-[#f5eee1] px-3 py-1 text-xs font-medium text-[#c84b08]">
-                          Power Generation
-                        </span>
-
-                        <span className="text-sm text-[#77716a]">
-                          Tenughat Thermal Power Station
-                        </span>
-
-                      </div>
-
-                      <h3 className="text-3xl font-bold md:text-4xl">
-                        Electrical Engineering Intern
-                      </h3>
-
-                    </div>
-
-                    <div className="whitespace-nowrap rounded-lg border border-black/10 px-4 py-2 text-sm text-[#55514b]">
-                      22 Jun 2026 – 28 Jul 2026
-                    </div>
-
-                  </div>
-
-                  <p className="mt-6 max-w-5xl text-lg leading-8 text-[#55514b]">
-                    Worked as an intern in a thermal power plant, gaining
-                    practical exposure to electricity generation, plant
-                    operations, electrical equipment and power-system
-                    processes.
-                  </p>
-
-                  <div className="mt-6 flex flex-wrap gap-2">
-
-                    {[
-                      "Generators",
-                      "Transformers",
-                      "Switchgear",
-                      "Protection Systems",
-                      "Boilers & Turbines",
-                    ].map((item) => (
-
-                      <span
-                        key={item}
-                        className="rounded-lg border border-[#ddd6ca] bg-[#f1eee7] px-3 py-2 text-sm"
-                      >
-                        {item}
-                      </span>
-
-                    ))}
-
-                  </div>
-
-                  <div className="mt-7 border-t border-black/10 pt-7">
-
-                    <p className="leading-7 text-[#66615b]">
-                      Gained an understanding of boilers, turbines,
-                      generators, transformers, switchgear and protection
-                      systems, along with power generation, transmission
-                      and maintenance practices.
-                    </p>
-
-                  </div>
-
-                  <div className="mt-7">
-
-                    <a
-                      href="https://drive.google.com/file/d/1P-PDspGKozfOhcC-hJa5OQrwcEE-qHA6/view"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-lg bg-[#171717] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#c84b08]"
-                    >
-                      Certificate ↗
-                    </a>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-              {/* EXPERIENCE 02 */}
-
-              <div className="relative md:pl-20">
-
-                <div className="absolute left-0 top-8 hidden h-[37px] w-[37px] items-center justify-center rounded-full border border-[#c9c3b8] bg-[#f5f2ea] md:flex">
-                  <div className="h-3 w-3 rounded-full bg-[#c84b08]" />
-                </div>
-
-                <div className="rounded-2xl border border-black/10 bg-white p-8 transition hover:border-[#c84b08]/40 md:p-10">
-
-                  <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-
-                    <div>
-
-                      <div className="mb-4 flex flex-wrap items-center gap-3">
-
-                        <span className="rounded-md border border-[#e5d6bb] bg-[#f5eee1] px-3 py-1 text-xs font-medium text-[#c84b08]">
-                          Railway Electrical Systems
-                        </span>
-
-                        <span className="text-sm text-[#77716a]">
-                          Electric Loco Shed, Bokaro
-                        </span>
-
-                      </div>
-
-                      <h3 className="text-3xl font-bold md:text-4xl">
-                        Electrical Maintenance Trainee
-                      </h3>
-
-                    </div>
-
-                    <div className="whitespace-nowrap rounded-lg border border-black/10 px-4 py-2 text-sm text-[#55514b]">
-                      26 Aug 2024 – 25 Sept 2024
-                    </div>
-
-                  </div>
-
-                  <p className="mt-6 max-w-5xl text-lg leading-8 text-[#55514b]">
-                    Worked as a trainee in electric locomotive maintenance,
-                    gaining practical exposure to locomotive equipment,
-                    inspection, safety procedures and basic maintenance
-                    practices.
-                  </p>
-
-                  <div className="mt-6 flex flex-wrap gap-2">
-
-                    {[
-                      "Traction Motors",
-                      "Transformers",
-                      "Converters",
-                      "Circuit Breakers",
-                      "Pantographs",
-                      "Braking Systems",
-                    ].map((item) => (
-
-                      <span
-                        key={item}
-                        className="rounded-lg border border-[#ddd6ca] bg-[#f1eee7] px-3 py-2 text-sm"
-                      >
-                        {item}
-                      </span>
-
-                    ))}
-
-                  </div>
-
-                  <div className="mt-7 border-t border-black/10 pt-7">
-
-                    <p className="leading-7 text-[#66615b]">
-                      Gained knowledge about traction motors, transformers,
-                      converters, circuit breakers, pantographs and braking
-                      systems and their role in safe and efficient locomotive
-                      operation.
-                    </p>
-
-                  </div>
-
-                  <div className="mt-7">
-
-                    <a
-                      href="https://drive.google.com/file/d/14hAO30T5URP18BkkUP_-7eyz0Bsp88qT/view"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-lg bg-[#171717] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#c84b08]"
-                    >
-                      Certificate ↗
-                    </a>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* =====================================================
-          6. CERTIFICATIONS
-      ===================================================== */}
-
+      {/* EXPERIENCE */}
       <section
-        id="certifications"
-        className="bg-[#eeece5] py-28"
+        id="experience"
+        className="scroll-mt-24 px-5 py-20 sm:px-8 md:py-24"
       >
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Industrial exposure"
+            title="Experience."
+            description="Learning through real-world exposure to power generation, electrical equipment, and maintenance practices."
+          />
 
-          <div className="mb-14">
+          <div className="relative ml-3 space-y-8 border-l-2 border-[#d8c9b4] pl-7 sm:ml-5 sm:pl-10">
+            {experiences.map((experience) => (
+              <article key={experience.organization} className="relative">
+                <span className="absolute -left-[37px] top-7 h-5 w-5 rounded-full border-4 border-[#f5f2ea] bg-[#c84b08] sm:-left-[50px]" />
 
-            <div className="inline-flex items-center gap-3 rounded-full border border-[#d9cdb6] bg-[#e8e2d5] px-5 py-2 text-sm font-medium text-[#c84b08]">
-              <span>✦</span>
-              <span>Verified Credentials</span>
-            </div>
-
-            <h2 className="mt-6 text-5xl font-bold tracking-[-0.04em] md:text-6xl">
-              Certifications
-            </h2>
-
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-[#66615b]">
-              Certifications and professional learning experiences that
-              support my technical knowledge and continuous development in
-              electrical engineering and technology.
-            </p>
-
-          </div>
-
-          {/* CERTIFICATION CARDS */}
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-
-            {certifications.map((cert) => (
-
-              <div
-                key={cert.number}
-                className="group flex min-h-[340px] flex-col justify-between rounded-3xl border border-black/10 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#c84b08]/40 hover:shadow-xl"
-              >
-
-                <div>
-
-                  {/* NUMBER + DATE */}
-
-                  <div className="flex items-center justify-between">
-
-                    <span className="text-sm font-semibold tracking-wider text-[#c84b08]">
-                      {cert.number}
+                <div className="rounded-[1.5rem] border border-[#ded7cb] bg-[#f8f6f0] p-6 sm:p-8">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#c84b08]">
+                      {experience.type}
                     </span>
-
-                    <span className="rounded-full bg-[#f5f2ea] px-4 py-2 text-xs font-semibold text-[#171717]/70">
-                      {cert.date}
+                    <span className="rounded-full bg-[#e9e0d2] px-3 py-1.5 text-xs font-semibold">
+                      {experience.date}
                     </span>
-
                   </div>
 
-                  {/* CATEGORY */}
-
-                  <div className="mt-7">
-
-                    <span className="text-xs font-semibold uppercase tracking-[0.15em] text-[#171717]/45">
-                      {cert.category}
-                    </span>
-
-                  </div>
-
-                  {/* TITLE */}
-
-                  <h3 className="mt-4 text-2xl font-bold leading-tight text-[#171717]">
-                    {cert.title}
+                  <h3 className="mt-5 text-2xl font-bold sm:text-3xl">
+                    {experience.role}
                   </h3>
 
-                </div>
+                  <p className="mt-2 text-lg font-semibold text-[#514b42]">
+                    {experience.organization}
+                  </p>
 
-                {/* ORGANIZATION + CERTIFICATE BUTTON */}
+                  <p className="mt-2 text-sm text-[#82786a]">
+                    {experience.location}
+                  </p>
 
-                <div className="mt-10 flex items-end justify-between gap-4 border-t border-black/10 pt-5">
+                  <p className="mt-5 max-w-4xl leading-7 text-[#625c52]">
+                    {experience.description}
+                  </p>
 
-                  <div>
-                    <p className="text-sm font-medium leading-6 text-[#171717]/65">
-                      {cert.organization}
-                    </p>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {experience.skills.map((skill) => (
+                      <Tag key={skill}>{skill}</Tag>
+                    ))}
                   </div>
 
-                  <a
-                    href={cert.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`View ${cert.title} certificate`}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#171717] text-lg text-white transition-all duration-300 hover:bg-[#c84b08]"
-                  >
-                    ↗
-                  </a>
-
+                  <div className="mt-7 border-t border-[#ded7cb] pt-5">
+                    <a
+                      href={experience.certificate}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl border border-[#171717] px-5 py-3 text-sm font-bold transition hover:bg-[#171717] hover:text-white"
+                    >
+                      View Training Certificate ↗
+                    </a>
+                  </div>
                 </div>
-
-              </div>
-
+              </article>
             ))}
-
           </div>
-
         </div>
       </section>
 
-      {/* =====================================================
-          7. EDUCATION
-      ===================================================== */}
+      {/* CERTIFICATIONS */}
+      <section
+        id="certifications"
+        className="scroll-mt-24 border-y border-[#e3dccf] bg-[#f5f2ea] px-5 py-20 sm:px-8 md:py-24"
+      >
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Learning & development"
+            title="Certifications."
+            description="Open a certificate to view it online, or open the original document."
+          />
 
-      <section id="education" className="bg-[#f5f2ea] py-28">
-        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {certifications.map((certificate) => {
+              const fileId = certificate.link.match(/\/d\/([^/]+)/)?.[1];
+              const previewUrl = fileId
+                ? `https://drive.google.com/file/d/${fileId}/preview`
+                : certificate.link;
 
-          <p className="text-sm font-semibold uppercase tracking-widest text-[#c84b08]">
-            Academic Background
-          </p>
+              return (
+                <article
+                  key={certificate.title}
+                  className="group flex min-w-0 flex-col overflow-hidden rounded-[1.6rem] border border-[#ded7cb] bg-[#f8f6f0] shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#c84b08]/70 hover:shadow-xl hover:shadow-[#171717]/10"
+                >
+                  {/* Certificate preview panel */}
+                  <div className="relative h-56 overflow-hidden border-b border-[#ded7cb] bg-white sm:h-60">
+                    <iframe
+                      src={previewUrl}
+                      title={`${certificate.title} certificate preview`}
+                      loading="lazy"
+                      className="h-full w-full bg-white"
+                    />
+                    <a
+                      href={certificate.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Open ${certificate.title} certificate`}
+                      className="absolute inset-0 flex items-center justify-center bg-[#171717]/0 opacity-0 transition duration-300 hover:bg-[#171717]/10 group-hover:opacity-100"
+                    >
+                      <span className="rounded-full bg-[#171717] px-4 py-2 text-sm font-bold text-white shadow-lg">
+                        Open certificate ↗
+                      </span>
+                    </a>
+                  </div>
 
-          <h2 className="mt-3 text-5xl font-bold md:text-6xl">
-            Education
-          </h2>
+                  {/* Certificate details */}
+                  <div className="flex flex-1 flex-col p-6 sm:p-7">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-sm font-bold text-[#c84b08]">
+                        {certificate.category} · {certificate.date}
+                      </span>
+                    </div>
 
-          <div className="mt-14 space-y-5">
-
-            {education.map((item, index) => (
-
-              <div
-                key={item.degree}
-                className="rounded-2xl border border-black/10 bg-white p-7 transition hover:border-[#c84b08]/40 md:p-8"
-              >
-
-                <div className="grid items-start gap-6 md:grid-cols-[80px_1fr_auto]">
-
-                  <span className="font-mono font-semibold text-[#c84b08]">
-                    0{index + 1}
-                  </span>
-
-                  <div>
-
-                    <h3 className="text-2xl font-bold">
-                      {item.degree}
+                    <h3 className="mt-4 text-xl font-extrabold leading-snug tracking-tight text-[#171717] sm:text-2xl">
+                      {certificate.title}
                     </h3>
 
-                    <p className="mt-2 font-medium text-[#55514b]">
-                      {item.institute}
+                    <p className="mt-2 text-base text-[#625c52]">
+                      {certificate.organization}
                     </p>
 
-                    <p className="mt-1 text-[#77716a]">
-                      {item.location}
-                    </p>
+                    <div className="mt-auto flex flex-wrap gap-3 pt-6">
+                      <a
+                        href={certificate.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#171717] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#c84b08]"
+                      >
+                        <span aria-hidden="true">◉</span> View Certificate
+                      </a>
 
+                      <a
+                        href={certificate.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#d8d0c3] px-4 py-3 text-sm font-bold text-[#171717] transition hover:border-[#c84b08] hover:bg-white"
+                      >
+                        ↗ PDF
+                      </a>
+                    </div>
                   </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-                  <div className="md:text-right">
+      {/* EDUCATION */}
+      <section
+        id="education"
+        className="scroll-mt-24 px-5 py-20 sm:px-8 md:py-24"
+      >
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Academic background"
+            title="Education."
+            description="My academic journey in electrical engineering and foundational education."
+          />
 
-                    <p className="text-sm text-[#77716a]">
-                      {item.period}
-                    </p>
-
-                    <p className="mt-2 font-semibold text-[#c84b08]">
-                      {item.result}
-                    </p>
-
-                  </div>
-
+          <div className="space-y-4">
+            {education.map((item) => (
+              <article
+                key={item.degree}
+                className="grid gap-5 rounded-2xl border border-[#ded7cb] bg-[#f8f6f0] p-6 transition hover:-translate-y-1 hover:border-[#c84b08]/60 sm:grid-cols-[1fr_auto] sm:items-center sm:p-8"
+              >
+                <div>
+                  <h3 className="text-xl font-bold">{item.degree}</h3>
+                  <p className="mt-2 font-medium text-[#514b42]">
+                    {item.institution}
+                  </p>
+                  <p className="mt-1 text-sm text-[#82786a]">
+                    {item.location}
+                  </p>
                 </div>
 
-              </div>
-
+                <div className="sm:text-right">
+                  <p className="text-sm font-semibold">{item.date}</p>
+                  <p className="mt-2 inline-block rounded-full bg-[#e9e0d2] px-3 py-1.5 text-sm font-bold text-[#76513b]">
+                    {item.result}
+                  </p>
+                </div>
+              </article>
             ))}
-
           </div>
-
         </div>
       </section>
 
-      {/* =====================================================
-          8. ACHIEVEMENTS
-      ===================================================== */}
+   {/* ACHIEVEMENTS */}
+<section
+  id="achievements"
+  className="scroll-mt-24 border-y border-[#e3dccf] bg-[#eeece5] px-5 py-20 sm:px-8 md:py-24"
+>
+  <div className="mx-auto max-w-7xl">
+    <SectionHeading
+      eyebrow="Milestones & recognition"
+      title="Achievements."
+      description="Awards and milestones that reflect my interest in engineering, innovation, and continuous learning."
+    />
 
-      <section id="achievements" className="bg-[#eeece5] py-28">
-        <div className="mx-auto max-w-7xl px-6">
+    <div className="grid items-start gap-7 md:grid-cols-2 xl:grid-cols-3">
+      {/* ACHIEVEMENT 1 */}
+      <article className="overflow-hidden rounded-[1.5rem] border border-[#dcd4c7] bg-[#f8f6f0] transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+        {/* Display the image directly without any button or zoom controls */}
+        <div className="h-[320px] overflow-hidden bg-[#e9e0d2]">
+<img
+  src="/achievements/clean-energy-prize.png"
+  alt="First Prize - Latest Trends in Clean Energy Vehicles"
+  className="h-full w-full object-cover object-[center_20%]"
+/>
+</div>
 
-          <div className="mb-14">
+        <div className="p-7 md:p-8">
+          <p className="mb-5 text-sm font-semibold text-[#c84b08]">
+            Achievement · Sep 2026
+          </p>
 
-            <p className="text-sm font-semibold uppercase tracking-widest text-[#c84b08]">
-              Recognition
-            </p>
+          <h3 className="text-2xl font-bold leading-snug text-[#171717]">
+            First Prize Winner
+          </h3>
 
-            <h2 className="mt-3 text-5xl font-bold md:text-6xl">
-              Achievements
-            </h2>
+          <p className="mt-3 text-base leading-relaxed text-[#625c52]">
+            Latest Trends in Clean Energy Vehicles
+          </p>
 
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-
-            {/* ACHIEVEMENT 01 */}
-
-            <div className="rounded-2xl bg-[#171717] p-8 text-white transition hover:-translate-y-1">
-
-              <div className="flex items-start justify-between">
-
-                <span className="text-sm font-semibold text-[#e88b5f]">
-                  01
-                </span>
-
-                <span className="text-sm text-gray-400">
-                  23 Sept 2026
-                </span>
-
-              </div>
-
-              <div className="mt-8 text-4xl">
-                🏆
-              </div>
-
-              <h3 className="mt-6 text-2xl font-bold">
-                1st Prize Winner
-              </h3>
-
-              <p className="mt-2 font-semibold text-[#e88b5f]">
-                Latest Trends in Clean Energy Vehicles
-              </p>
-
-              <p className="mt-4 leading-7 text-gray-400">
-                Secured first position in a competition focused on emerging
-                developments and trends in clean energy vehicles.
-              </p>
-
-            </div>
-
-            {/* ACHIEVEMENT 02 */}
-
-            <div className="rounded-2xl border border-black/10 bg-white p-8 transition hover:-translate-y-1">
-
-              <div className="flex items-start justify-between">
-
-                <span className="text-sm font-semibold text-[#c84b08]">
-                  02
-                </span>
-
-                <span className="text-sm text-[#77716a]">
-                  Dec 2025
-                </span>
-
-              </div>
-
-              <div className="mt-8 text-4xl">
-                ◇
-              </div>
-
-              <h3 className="mt-6 text-2xl font-bold">
-                Patent Published
-              </h3>
-
-              <p className="mt-2 font-semibold text-[#c84b08]">
-                BI-COPTER
-              </p>
-
-              <p className="mt-4 leading-7 text-[#66615b]">
-                Published a patent based on the development of a two-rotor
-                aerial vehicle.
-              </p>
-
-            </div>
-
-            {/* ACHIEVEMENT 03 */}
-
-            <div className="rounded-2xl border border-black/10 bg-white p-8 transition hover:-translate-y-1">
-
-              <div className="flex items-start justify-between">
-
-                <span className="text-sm font-semibold text-[#c84b08]">
-                  03
-                </span>
-
-                <span className="text-sm text-[#77716a]">
-                  Dec 2022
-                </span>
-
-              </div>
-
-              <div className="mt-8 text-4xl">
-                🥉
-              </div>
-
-              <h3 className="mt-6 text-2xl font-bold">
-                Mathematics Quiz
-              </h3>
-
-              <p className="mt-2 font-semibold text-[#c84b08]">
-                3rd Prize Winner
-              </p>
-
-              <p className="mt-4 leading-7 text-[#66615b]">
-                Secured third prize in a Mathematics Quiz competition at
-                Silli Polytechnic, Silli.
-              </p>
-
-            </div>
-
-          </div>
-
+          <p className="mt-4 text-sm leading-7 text-[#625c52]">
+            Received first prize for presenting work related to emerging
+            technologies and innovations in clean energy vehicles.
+          </p>
         </div>
-      </section>
+      </article>
 
-      {/* =====================================================
-          9. CONTACT
-      ===================================================== */}
+      {/* ACHIEVEMENT 2 */}
+      <article className="overflow-hidden rounded-[1.5rem] border border-[#dcd4c7] bg-[#f8f6f0] transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+        {/* Static document preview; no zoom controls */}
+        <div className="h-[320px] overflow-hidden bg-[#e9e0d2] p-4">
+          <iframe
+            src="https://drive.google.com/file/d/1S3cCfgLQdm725tJ9thmndDsDpdiySz2l/preview?rm=minimal"
+            title="BI-COPTER patent document"
+            loading="lazy"
+            tabIndex={-1}
+            className="pointer-events-none h-full w-full border-0 bg-white"
+          />
+        </div>
 
-      <section id="contact" className="bg-[#171717] py-28 text-white">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="p-7 md:p-8">
+          <p className="mb-5 text-sm font-semibold text-[#c84b08]">
+            Innovation · Dec 2025
+          </p>
 
-          <div className="grid gap-16 lg:grid-cols-2">
+          <h3 className="text-2xl font-bold leading-snug text-[#171717]">
+            Patent Published
+          </h3>
 
-            {/* LEFT */}
+          <p className="mt-3 text-base leading-relaxed text-[#625c52]">
+            BI-COPTER
+          </p>
 
+          <p className="mt-4 text-sm leading-7 text-[#625c52]">
+            Patent publication associated with the BI-COPTER project.
+          </p>
+
+          <a
+            href="https://drive.google.com/file/d/1S3cCfgLQdm725tJ9thmndDsDpdiySz2l/view"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex items-center justify-center rounded-xl bg-[#171717] px-6 py-3 font-semibold text-white transition hover:bg-[#c84b08]"
+          >
+            View Patent ↗
+          </a>
+        </div>
+      </article>
+
+      {/* ACHIEVEMENT 3 */}
+      <article className="overflow-hidden rounded-[1.5rem] border border-[#dcd4c7] bg-[#f8f6f0] transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+        {/* Static document preview; no zoom controls */}
+        <div className="h-[320px] overflow-hidden bg-[#e9e0d2] p-4">
+          <iframe
+            src="https://drive.google.com/file/d/1wAaMJPtP0-kgA3Vxt7Yyf57plKew-hfq/preview?rm=minimal"
+            title="Mathematics Quiz certificate"
+            loading="lazy"
+            tabIndex={-1}
+            className="pointer-events-none h-full w-full border-0 bg-white"
+          />
+        </div>
+
+        <div className="p-7 md:p-8">
+          <p className="mb-5 text-sm font-semibold text-[#c84b08]">
+            Academic · Dec 2022
+          </p>
+
+          <h3 className="text-2xl font-bold leading-snug text-[#171717]">
+            Third Prize Winner
+          </h3>
+
+          <p className="mt-3 text-base leading-relaxed text-[#625c52]">
+            Mathematics Quiz · Silli Polytechnic
+          </p>
+
+          <p className="mt-4 text-sm leading-7 text-[#625c52]">
+            Secured third prize in a Mathematics Quiz organized at Silli
+            Polytechnic.
+          </p>
+
+          <a
+            href="https://drive.google.com/file/d/1wAaMJPtP0-kgA3Vxt7Yyf57plKew-hfq/view"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex items-center justify-center rounded-xl bg-[#171717] px-6 py-3 font-semibold text-white transition hover:bg-[#c84b08]"
+          >
+            View Certificate ↗
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+      {/* CONTACT */}
+      <section
+        id="contact"
+        className="scroll-mt-24 bg-[#171717] px-5 py-20 text-[#f8f6f0] sm:px-8 md:py-24"
+      >
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Get in touch"
+            title="Let's connect."
+            description="I'm open to discussing electrical engineering projects, internships, and career opportunities. Feel free to reach out."
+          />
+
+          <div className="grid gap-8 lg:grid-cols-[1fr_0.95fr]">
             <div>
+              <h3 className="mb-6 text-xl font-bold">
+                Contact Information
+              </h3>
 
-              <p className="text-sm font-semibold uppercase tracking-widest text-[#e88b5f]">
-                Get In Touch
-              </p>
-
-              <h2 className="mt-4 text-5xl font-bold tracking-[-0.04em] md:text-6xl">
-                Let&apos;s connect.
-              </h2>
-
-              <p className="mt-7 max-w-xl text-lg leading-8 text-gray-400">
-                I am open to opportunities, technical discussions,
-                engineering projects and learning experiences related to
-                electrical engineering and emerging energy technologies.
-              </p>
-
-              <div className="mt-10 space-y-5">
-
+              <div className="space-y-4">
                 <a
                   href="mailto:sonupandit6200@gmail.com"
-                  className="flex items-center gap-4 text-gray-300 transition hover:text-[#e88b5f]"
+                  className="flex items-center gap-4 rounded-2xl bg-[#f8f6f0] p-5 text-[#171717] transition hover:bg-[#e9e0d2]"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e9e0d2] text-xl">
                     ✉
                   </span>
-
-                  sonupandit6200@gmail.com
+                  <span className="min-w-0">
+                    <span className="block text-sm text-[#82786a]">
+                      Email
+                    </span>
+                    <span className="mt-1 block break-all font-semibold">
+                      sonupandit6200@gmail.com
+                    </span>
+                  </span>
                 </a>
 
                 <a
                   href="tel:+916200424968"
-                  className="flex items-center gap-4 text-gray-300 transition hover:text-[#e88b5f]"
+                  className="flex items-center gap-4 rounded-2xl bg-[#f8f6f0] p-5 text-[#171717] transition hover:bg-[#e9e0d2]"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e9e0d2] text-xl">
                     ☎
                   </span>
-
-                  +91 62004 24968
+                  <span>
+                    <span className="block text-sm text-[#82786a]">
+                      Phone
+                    </span>
+                    <span className="mt-1 block font-semibold">
+                      +91 62004 24968
+                    </span>
+                  </span>
                 </a>
 
                 <a
                   href="https://www.linkedin.com/in/sonu-pan2"
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 text-gray-300 transition hover:text-[#e88b5f]"
+                  rel="noreferrer"
+                  className="flex items-center gap-4 rounded-2xl bg-[#f8f6f0] p-5 text-[#171717] transition hover:bg-[#e9e0d2]"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e9e0d2] text-lg font-black">
                     in
                   </span>
-
-                  LinkedIn
+                  <span>
+                    <span className="block text-sm text-[#82786a]">
+                      LinkedIn
+                    </span>
+                    <span className="mt-1 block font-semibold">
+                      Sonu Pandit ↗
+                    </span>
+                  </span>
                 </a>
 
                 <a
                   href="https://github.com/sonupandit"
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 text-gray-300 transition hover:text-[#e88b5f]"
+                  rel="noreferrer"
+                  className="flex items-center gap-4 rounded-2xl bg-[#f8f6f0] p-5 text-[#171717] transition hover:bg-[#e9e0d2]"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
-                    &lt;/&gt;
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e9e0d2] text-sm font-black">
+                    GH
                   </span>
-
-                  GitHub
+                  <span>
+                    <span className="block text-sm text-[#82786a]">
+                      GitHub
+                    </span>
+                    <span className="mt-1 block font-semibold">
+                      sonupandit ↗
+                    </span>
+                  </span>
                 </a>
-
               </div>
-
             </div>
 
-            {/* RIGHT */}
+            <div className="rounded-[1.5rem] bg-[#f8f6f0] p-6 text-[#171717] sm:p-8">
+              <h3 className="text-2xl font-bold">Send a Message</h3>
 
-            <div className="flex items-center lg:justify-end">
+              <p className="mt-2 leading-6 text-[#625c52]">
+                Complete the form below. Your email application will open with
+                the message details ready to send.
+              </p>
 
-              <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8">
-
-                <p className="text-sm font-semibold uppercase tracking-widest text-[#e88b5f]">
-                  Areas of Interest
-                </p>
-
-                <div className="mt-7 space-y-4">
-
-                  {[
-                    "Power Systems",
-                    "Smart Grid",
-                    "Renewable Energy",
-                    "Electric Vehicles",
-                  ].map((item) => (
-
-                    <div
-                      key={item}
-                      className="flex items-center justify-between border-b border-white/10 pb-4 last:border-0"
-                    >
-
-                      <span className="text-gray-300">
-                        {item}
-                      </span>
-
-                      <span className="text-[#e88b5f]">
-                        →
-                      </span>
-
-                    </div>
-
-                  ))}
-
+              <form onSubmit={handleContactSubmit} className="mt-7 space-y-5">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="mb-2 block text-sm font-semibold"
+                  >
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="Your name"
+                    className="w-full rounded-xl border border-[#d8d0c3] bg-white px-4 py-3.5 outline-none transition focus:border-[#c84b08] focus:ring-2 focus:ring-[#c84b08]/10"
+                  />
                 </div>
 
-                <a
-                  href="mailto:sonupandit6200@gmail.com"
-                  className="mt-8 inline-flex w-full justify-center rounded-xl bg-white px-6 py-4 font-semibold text-[#171717] transition hover:bg-[#e88b5f]"
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block text-sm font-semibold"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="you@example.com"
+                    className="w-full rounded-xl border border-[#d8d0c3] bg-white px-4 py-3.5 outline-none transition focus:border-[#c84b08] focus:ring-2 focus:ring-[#c84b08]/10"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="message"
+                    className="mb-2 block text-sm font-semibold"
+                  >
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    rows={5}
+                    placeholder="Write your message..."
+                    className="w-full resize-y rounded-xl border border-[#d8d0c3] bg-white px-4 py-3.5 outline-none transition focus:border-[#c84b08] focus:ring-2 focus:ring-[#c84b08]/10"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full rounded-xl bg-[#171717] px-5 py-4 font-bold text-white transition hover:bg-[#c84b08]"
                 >
-                  Send Me an Email
-                </a>
-
-              </div>
-
+                  Send Message ↗
+                </button>
+              </form>
             </div>
-
           </div>
-
         </div>
       </section>
 
-      {/* =====================================================
-          FOOTER
-      ===================================================== */}
+      {/* FOOTER */}
+      <footer className="bg-[#171717] px-5 pb-8 text-[#f8f6f0] sm:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 border-t border-white/15 pt-7 sm:flex-row sm:items-center sm:justify-between">
+          <a href="#home" className="text-lg font-bold">
+            Sonu Pandit
+          </a>
 
-      <footer className="border-t border-white/10 bg-[#171717]">
+          <p className="text-sm text-white/60">
+            © 2026 Sonu Pandit. All rights reserved.
+          </p>
 
-        <div className="mx-auto max-w-7xl px-6 py-7">
-
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-
-            <p className="text-sm text-gray-500">
-              © 2026 Sonu Pandit. All rights reserved.
-            </p>
-
-            <p className="text-sm text-gray-500">
-              Electrical Engineering • Power Systems • Smart Grid
-            </p>
-
-          </div>
-
+          <a
+            href="#home"
+            className="text-sm font-semibold transition hover:text-[#e9a27c]"
+          >
+            Back to top ↑
+          </a>
         </div>
 
+        <p className="mx-auto mt-4 max-w-7xl text-xs text-white/45">
+          Electrical Engineering · Power Systems · Smart Grid · Renewable
+          Energy · Electric Vehicles
+        </p>
       </footer>
-
     </main>
   );
 }
