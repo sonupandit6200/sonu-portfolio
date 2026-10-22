@@ -155,7 +155,7 @@ const education = [
     institution: "Silli Polytechnic",
     location: "Silli, Ranchi, Jharkhand",
     date: "Sep 2022 – Jun 2025",
-    result: "80.44%",
+    result: "77.67%",
   },
   {
     degree: "Matriculation",
